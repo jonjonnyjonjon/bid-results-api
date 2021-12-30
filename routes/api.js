@@ -3,23 +3,33 @@ const router = express.Router();
 const Bidding = require('../models/bidding');
 
 router.get("/bidding", async (req, res) => {
-    const userInput = req.query.userInput;
-    let [term, courseCode, biddingWindow, instructor] = userInput.split(", ");
-    let bwSplit = biddingWindow.split("R").join("").split("W");
-    let bwFormatted = `Round ${bwSplit[0]} Window ${bwSplit[1]}`;
     try {
         const bidding = await Bidding.find(
             {   
-                term: term,
-                courseCode: courseCode.toUpperCase(),
-                biddingWindow: bwFormatted,
-                instructor: instructor.toUpperCase()
+                term: req.query.term,
+                courseCode: req.query.courseCode,
+                biddingWindow: req.query.biddingWindow,
+                instructor: req.query.instructor
             }
         );
         res.send(bidding);
     } catch (error) {
-        res.send(error)
+        res.send(error);
     }
 });
+
+router.get("/forGraph", async (req, res) => {
+    try {
+        const bidding = await Bidding.find({
+            term: req.query.term,
+            courseCode: req.query.courseCode,
+            instructor: req.query.instructor,
+            section: req.query.section
+        });
+        res.send(bidding);
+    } catch (error) {
+        res.send(error);
+    }
+})
 
 module.exports = router;
