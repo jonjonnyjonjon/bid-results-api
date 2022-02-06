@@ -18,20 +18,6 @@ router.get("/bidding", async (req, res) => {
     }
 });
 
-router.get("/forGraph", async (req, res) => {
-    try {
-        const bidding = await Bidding.find({
-            term: req.query.term,
-            courseCode: req.query.courseCode,
-            instructor: req.query.instructor,
-            section: req.query.section
-        });
-        res.send(bidding);
-    } catch (error) {
-        res.send(error);
-    }
-})
-
 router.get("/instructors", async (req, res) => {
     try {
         const bidding = await Bidding.find(
@@ -52,5 +38,32 @@ router.get("/instructors", async (req, res) => {
         res.send(error);
     }
 });
+
+router.get("/graphOption1", async (req, res) => {
+    try {
+        const bidding = await Bidding.find({
+            term: req.query.term,
+            courseCode: req.query.courseCode,
+            instructor: req.query.instructor,
+            section: req.query.section
+        });
+        res.send(bidding);
+    } catch (error) {
+        res.send(error);
+    }
+})
+
+router.get("/graphOption2", async (req, res) => {
+    try {
+        const bidding = await Bidding
+        .find({
+            term: req.query.term,
+            courseCode: req.query.courseCode,
+        }, "biddingWindow instructor minBid medianBid section -_id");
+        res.send(bidding);
+    } catch (error) {
+        res.send(error);
+    }
+})
 
 module.exports = router;
